@@ -8,16 +8,16 @@ from tqdm import tqdm
 mpl.use('Agg')
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--nS", default=2, type=int)
-parser.add_argument("--nA", default=2, type=int)
+parser.add_argument("--nS", default=5, type=int)
+parser.add_argument("--nA", default=5, type=int)
 parser.add_argument("--gamma", default=0.9, type=float)
 parser.add_argument("--lr", default=5e-2, type=float)
 parser.add_argument("--lr_decay", default=0.8, type=float)
-parser.add_argument("--n", default=2, type=int)
+parser.add_argument("--n", default=5, type=int)
 parser.add_argument("--eps", default=0.8, type=float)
 parser.add_argument("--sparsity", default=0.2, type=float)
 parser.add_argument("--gen", default="random", type=str)
-parser.add_argument("--iter", default=10)
+parser.add_argument("--iter", default=2048)
 args = parser.parse_args()
 
 nS, nA, gamma = args.nS, args.nA, args.gamma
