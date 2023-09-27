@@ -38,7 +38,7 @@ E_size = len(E_lst) + 1
 
 separation_len = 50
 
-save_dir = './plot-SoftPAvg-random_MDP'
+save_dir = './plot-Fed-random_MDP'
 
 
 def experiment():
