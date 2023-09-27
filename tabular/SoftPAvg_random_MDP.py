@@ -92,10 +92,11 @@ def experiment():
                 for i in range(ntrain):
                     local_pi_logit = pi_logit.copy()
                     for _ in range(E):
-                        grad = softmax_policy_gradient(local_pi_logit, train_P[i], R, gamma)
+                        grad, _ = softmax_policy_gradient(local_pi_logit, train_P[i], R, gamma)
                         local_pi_logit += lr * grad
                     pis_logit.append(local_pi_logit)
                 pi_logit = sum(pis_logit) / ntrain
+        
 
         # Baseline: Train every agent separately, i.e. do not merge
         lr = args.lr
@@ -115,7 +116,7 @@ def experiment():
             for i in range(ntrain):
                 local_pi_logit = pis_logit[i]
 
-                grad = softmax_policy_gradient(local_pi_logit, train_P[i], R, gamma)
+                grad, _ = softmax_policy_gradient(local_pi_logit, train_P[i], R, gamma)
                 local_pi_logit += lr * grad
 
                 pis_logit[i] = local_pi_logit

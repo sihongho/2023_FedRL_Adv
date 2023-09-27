@@ -69,7 +69,7 @@ def softmax_policy_gradient(pi_logit, P, R, gamma):
     Q_pi = VtoQ(V_pi, P, R, gamma)
     A_pi = Q_pi - V_pi[:, np.newaxis]
     grad = A_pi / (1 - gamma)
-    return grad
+    return grad, P_pi
 
 
 def project_policy_gradient(pi, P, R, d_0, gamma):
