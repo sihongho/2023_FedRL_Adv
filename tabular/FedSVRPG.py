@@ -98,16 +98,21 @@ def experiment():
                     test_MEObj_lst[E_num][e * E + ttt] = ME_Obj_test
 
                 pis_logit = []
+                tau = sample_trajectory(train_P[0], pi, start_state=0, num_steps=10)
                 for i in range(ntrain):
                     local_pi_logit = pi_logit.copy()
                     for _ in range(E):
-                        grad, P_pi = softmax_policy_gradient(local_pi_logit, train_P[i], R, gamma)
+                        grad = softmax_policy_gradient(local_pi_logit, train_P[i], R, gamma)
+                        P_pi = trajectory_probability(tau, train_P[i], local_pi_logit)
                         if len(pis_logit)!=0:
-                            _ , P_pi_pre = softmax_policy_gradient(pis_logit[-1], train_P[i], R, gamma)
+                            P_pi_pre = trajectory_probability(tau, train_P[i], pis_logit[-1])
                         else:
-                            _ , P_pi_pre = softmax_policy_gradient(local_pi_logit, train_P[i], R, gamma)
+                            P_pi_pre = trajectory_probability(tau, train_P[i], local_pi_logit)
                         beta_fedsvrpg = 0.5
-                        w_fedsvrpg = P_pi_pre / P_pi
+                        if P_pi == 0:
+                            w_fedsvrpg = 1
+                        else:
+                            w_fedsvrpg = P_pi_pre / P_pi
                         local_u = beta_fedsvrpg * grad + (1-beta_fedsvrpg) * (u + grad - w_fedsvrpg * grad_prev)
                         local_pi_logit -= lr * local_u
                         grad_prev = grad

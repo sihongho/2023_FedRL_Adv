@@ -10,6 +10,49 @@ from GridWorldEnvironment import WindyCliffGridWorld
 inf = np.inf
 
 
+def sample_trajectory(P, pi, start_state, num_steps):
+    """
+    Sample a trajectory based on given transition probabilities and policy.
+
+    P: State transition matrix. Shape (nS, nA, nS).
+    pi: Policy matrix. Shape (nS, nA).
+    start_state: The state to start the trajectory from.
+    num_steps: Number of steps in the trajectory.
+
+    Returns: A list of (state, action) tuples.
+    """
+    trajectory = []
+    current_state = start_state
+
+    for _ in range(num_steps):
+        # Sample an action based on the policy
+        action = np.random.choice(np.arange(pi.shape[1]), p=pi[current_state])
+
+        # Sample the next state based on the state transition matrix
+        next_state = np.random.choice(np.arange(P.shape[2]), p=P[current_state][action])
+
+        # Append to the trajectory
+        trajectory.append((current_state, action))
+
+        # Move to the next state
+        current_state = next_state
+
+    return trajectory
+
+
+def trajectory_probability(trajectory, P, pi):
+    prob = 1.0
+    for t in range(len(trajectory) - 1):
+        s, a = trajectory[t]
+        s_next = trajectory[t + 1][0]
+        prob *= pi[s][a] * P[s][a][s_next]
+    return prob
+
+# trajectory = [(s1, a1), (s2, a2), (s3, a3), ...]
+# prob = trajectory_probability(trajectory, P, pi)
+# print(prob)
+
+
 # Occupancy measure
 def d_pi(gamma, P_pi, d0):
     nS, _ = P_pi.shape
@@ -69,7 +112,7 @@ def softmax_policy_gradient(pi_logit, P, R, gamma):
     Q_pi = VtoQ(V_pi, P, R, gamma)
     A_pi = Q_pi - V_pi[:, np.newaxis]
     grad = A_pi / (1 - gamma)
-    return grad, P_pi
+    return grad
 
 
 def project_policy_gradient(pi, P, R, d_0, gamma):
