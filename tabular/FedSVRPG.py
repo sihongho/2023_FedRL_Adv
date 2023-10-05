@@ -62,8 +62,8 @@ def experiment():
     Ps = generate_Ps(ntrain + ntest, nS, nA, gen=gen, eps=eps, sparsity=sparsity, seed=seed)
     train_P = Ps[:ntrain]
     test_P = Ps[ntrain:]
-    grad_prev, _ = softmax_policy_gradient(pi_logit_init, train_P[0], R, gamma)
-    u, _ = softmax_policy_gradient(pi_logit_init, train_P[0], R, gamma)
+    grad_prev = softmax_policy_gradient(pi_logit_init, train_P[0], R, gamma)
+    u = softmax_policy_gradient(pi_logit_init, train_P[0], R, gamma)
 
     for count in tqdm(range(outer_iter_num)):
         # Generate environments
@@ -141,7 +141,7 @@ def experiment():
             for i in range(ntrain):
                 local_pi_logit = pis_logit[i]
 
-                grad , _ = softmax_policy_gradient(local_pi_logit, train_P[i], R, gamma)
+                grad = softmax_policy_gradient(local_pi_logit, train_P[i], R, gamma)
                 local_pi_logit += lr * grad
 
                 pis_logit[i] = local_pi_logit
