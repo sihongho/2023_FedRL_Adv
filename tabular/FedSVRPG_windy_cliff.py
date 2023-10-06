@@ -117,7 +117,8 @@ def experiment():
                         else:
                             P_pi_pre = trajectory_probability_wiff(tau, train_P[i], local_pi_logit)
                         beta_fedsvrpg = 0.5
-                        if P_pi == 0:
+                        epsilon = 1e-10  # 或适当的其他小值
+                        if abs(P_pi) < epsilon:
                             w_fedsvrpg = 1
                         else:
                             w_fedsvrpg = P_pi_pre / P_pi
