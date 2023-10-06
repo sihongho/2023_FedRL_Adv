@@ -10,7 +10,7 @@ from GridWorldEnvironment import WindyCliffGridWorld
 inf = np.inf
 
 
-def sample_trajectory(P, pi, start_state, num_steps):
+def sample_trajectory(P, R, pi, start_state, num_steps):
     """
     Sample a trajectory based on given transition probabilities and policy.
 
@@ -21,15 +21,17 @@ def sample_trajectory(P, pi, start_state, num_steps):
 
     Returns: A list of (state, action) tuples.
     """
+    nS, nA = R.shape
     trajectory = []
     current_state = start_state
 
+
     for _ in range(num_steps):
         # Sample an action based on the policy
-        action = np.random.choice(np.arange(pi.shape[1]), p=pi[current_state])
+        action = np.random.choice(np.arange(nA), p=pi[current_state])
 
         # Sample the next state based on the state transition matrix
-        next_state = np.random.choice(np.arange(P.shape[2]), p=P[current_state][action])
+        next_state = np.random.choice(np.arange(nS), p=P[current_state*action])
 
         # Append to the trajectory
         trajectory.append((current_state, action))
@@ -45,7 +47,7 @@ def trajectory_probability(trajectory, P, pi):
     for t in range(len(trajectory) - 1):
         s, a = trajectory[t]
         s_next = trajectory[t + 1][0]
-        prob *= pi[s][a] * P[s][a][s_next]
+        prob *= pi[s][a] * P[s*a][s_next]
     return prob
 
 # trajectory = [(s1, a1), (s2, a2), (s3, a3), ...]
