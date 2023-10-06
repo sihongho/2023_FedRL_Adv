@@ -44,6 +44,7 @@ def sample_trajectory(P, R, pi, start_state, num_steps):
 
 def trajectory_probability(trajectory, P, pi):
     prob = 1.0
+    pi = np_softmax(pi)
     for t in range(len(trajectory) - 1):
         s, a = trajectory[t]
         s_next = trajectory[t + 1][0]
@@ -53,6 +54,45 @@ def trajectory_probability(trajectory, P, pi):
 # trajectory = [(s1, a1), (s2, a2), (s3, a3), ...]
 # prob = trajectory_probability(trajectory, P, pi)
 # print(prob)
+
+def generate_trajectory_cliff(P, nS, nA, initial_state=0, max_steps=100, terminal_states=[]):
+    trajectory = []
+    state = initial_state
+    # print(P.shape)
+
+    for step in range(max_steps):
+        # 选择一个动作。这里我们随机选择.
+        action = np.random.choice(np.arange(nA))
+        # print(action)
+
+        # 根据状态转移概率选择下一个状态。
+        next_state = np.random.choice(np.arange(nS), p=P[state][action])
+        # print(next_state)
+
+        # 将(state, action, next_state)添加到轨迹中。
+        trajectory.append((state, action, next_state))
+
+        # 如果达到终止状态，则停止。
+        if next_state in terminal_states:
+            break
+
+        state = next_state
+
+    return trajectory
+
+
+def trajectory_probability_wiff(trajectory, P, pi_logit):
+    # 转换策略为概率形式
+    pi_prob = np_softmax(pi_logit)
+
+    prob = 1.0
+    for state, action, next_state in trajectory:
+        # 计算每步的概率
+        prob *= pi_prob[state][action] * P[state][action][next_state]
+        
+    return prob
+
+
 
 
 # Occupancy measure
