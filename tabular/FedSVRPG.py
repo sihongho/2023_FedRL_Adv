@@ -100,7 +100,7 @@ def experiment():
                 pis_logit = []
                 for i in range(ntrain):
                     local_pi_logit = pi_logit.copy()
-                    tau = sample_trajectory(train_P[0], R, pi, start_state=0, num_steps=10)
+                    tau = sample_trajectory(train_P[0], R, pi, start_state=0, num_steps=5)
                     for _ in range(E):
                         grad = softmax_policy_gradient(local_pi_logit, train_P[i], R, gamma)
                         P_pi = trajectory_probability(tau, train_P[i], local_pi_logit)

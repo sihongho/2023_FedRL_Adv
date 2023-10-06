@@ -28,7 +28,7 @@ def sample_trajectory(P, R, pi, start_state, num_steps):
 
     for _ in range(num_steps):
         # Sample an action based on the policy
-        action = np.random.choice(np.arange(nA), p=pi[current_state])
+        action = np.random.choice(np.arange(nA))
 
         # Sample the next state based on the state transition matrix
         next_state = np.random.choice(np.arange(nS), p=P[current_state*action])
