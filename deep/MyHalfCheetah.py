@@ -13,7 +13,7 @@ tgt1_pos = 3707 + 7
 tgt2_pos = 4594 + 7
 
 # You need to modify this variable by yourself
-site_packages_dir = '/miniconda3/envs/torch/lib/python3.8/'
+site_packages_dir = '/.conda/envs/hsh_2023_mujoco_py/lib/python3.8/'
 
 asset_path = site_packages_dir + 'site-packages/gym/envs/mujoco/assets/'
 ori_xml_path = asset_path + 'half_cheetah.xml'
